@@ -39,11 +39,14 @@ router.put('/api/seats/:id', (req, res) => {
 
 router.post('/api/seats', (req, res) => {
     const { day, seat, client, email } = req.body;
-    id = uuid.v4();
+    const isSeatTaken = db.seats.some(s => s.day === day && s.seat === seat);
+    if (isSeatTaken) {
+        return res.status(400).json({ message: "The slot is already taken..." });
+    }
+    const id = uuid.v4();
     const newSeat = { id, day, seat, client, email };
     db.seats.push(newSeat);
     res.json(m);
-    
 });
 
 const m = {

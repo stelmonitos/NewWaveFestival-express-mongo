@@ -38,7 +38,7 @@ const OrderTicketForm = () => {
   const submitForm = async (e) => {
     e.preventDefault();
     if(order.client && order.email && order.day && order.seat) {
-      dispatch(addSeatRequest(order))
+      await dispatch(addSeatRequest(order))
       .then(() => {
         dispatch(loadSeatsRequest());
       })
