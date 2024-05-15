@@ -43,6 +43,7 @@ router.post('/api/seats', (req, res) => {
     const newSeat = { id, day, seat, client, email };
     db.seats.push(newSeat);
     res.json(m);
+    
 });
 
 const m = {
