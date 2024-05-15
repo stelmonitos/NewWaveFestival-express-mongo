@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const uuid = require('uuid');
 const { testimonials } = require('../db');
 const db = require('../db.js');
@@ -9,25 +8,22 @@ router.route('/api/testimonials').get((req, res) => {
     res.json(db.testimonials);
 });
 
-app.get('/api/testimonials', (req, res) => {
-    res.json(db.testimonials);
-})
-app.get('/api/testimonials/random', (req, res) => {
+router.get('/api/testimonials/random', (req, res) => {
     const testimonial = db.testimonials[Math.floor(Math.random() * db.testimonials.length)];
     res.json(testimonial);
 });
 
-app.get('/api/testimonials/:id', (req, res) => {
+router.get('/api/testimonials/:id', (req, res) => {
     const id = req.params.id;
-    const testimonial = db.find(t => t.id == id);
+    const testimonial = db.testimonials.find(t => t.id == id);
     if (testimonial) {
         res.json(testimonial);
     } else {
-        res.json(e)
+        console.log(testimonial)
     }
 });
 
-app.put('/api/testimonials/:id', (req, res) => {
+router.put('/api/testimonials/:id', (req, res) => {
     const { author, text } = req.body;
     const id = req.params.id;
     const index = db.testimonials.findIndex(t => t.id == id);
@@ -38,7 +34,7 @@ app.put('/api/testimonials/:id', (req, res) => {
     }
 })
 
-app.post('/api/testimonials', (req, res) => {
+router.post('/api/testimonials', (req, res) => {
     const { author, text } = req.body;
     id = uuid.v4();
     const testimonial = { id, author, text };
@@ -53,7 +49,7 @@ const e = {
     message: 'error',
 }
 
-app.delete('/api/testimonials/:id', (req, res) => {
+router.delete('/api/testimonials/:id', (req, res) => {
     const id = req.params.id;
     const index = db.testimonials.findIndex(t => t.id == id);
     if (index != -1) {

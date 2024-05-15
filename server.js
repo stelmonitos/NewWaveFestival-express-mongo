@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 const seatsRoutes = require('./routes/seats.routes.js')
 const concertsRoutes = require('./routes/concerts.routes.js')
 const testimonialsRoutes = require('./routes/testimonials.routes.js')
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 

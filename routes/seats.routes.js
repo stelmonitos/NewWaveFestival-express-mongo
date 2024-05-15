@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const uuid = require('uuid');
 const { seats } = require('../db');
 const db = require('../db.js');
@@ -9,17 +8,15 @@ router.route('/api/seats').get((req, res) => {
     res.json(db.seats);
 });
 
-app.get('/api/seats', (req, res) => {
-    res.json(db.seats);
-})
-app.get('/api/seats/random', (req, res) => {
-    const seat = db.seats[Math.floor(Math.random() * db.seats.length)];
-    res.json(seat);
+router.get('/api/seats/random', (req, res) => {
+    const seatId = db.seats[Math.floor(Math.random() * db.seats.length)];
+    res.json(seatId);
 });
 
-app.get('/api/seats/:id', (req, res) => {
+router.get('/api/seats/:id', (req, res) => {
     const id = req.params.id;
-    const seat = db.find(t => t.id == id);
+    const seat = db.seats.find(t => t.id == id);
+    console.log(seat);
     if (seat) {
         res.json(seat);
     } else {
@@ -27,22 +24,24 @@ app.get('/api/seats/:id', (req, res) => {
     }
 });
 
-app.put('/api/seats/:id', (req, res) => {
-    const { author, text } = req.body;
+router.put('/api/seats/:id', (req, res) => {
+    const { day, seat, client, email } = req.body;
     const id = req.params.id;
     const index = db.seats.findIndex(t => t.id == id);
     if (index != -1) {
-        db.seats[index].author = author;
-        db.seats[index].text = text;
+        db.seats[index].day = day;
+        db.seats[index].seat = seat;
+        db.seats[index].client = client;
+        db.seats[index].email = email;
         res.json(m);
     }
 })
 
-app.post('/api/seats', (req, res) => {
-    const { author, text } = req.body;
+router.post('/api/seats', (req, res) => {
+    const { day, seat, client, email } = req.body;
     id = uuid.v4();
-    const seat = { id, author, text };
-    db.seats.push(seat);
+    const newSeat = { id, day, seat, client, email };
+    db.seats.push(newSeat);
     res.json(m);
 });
 
@@ -53,7 +52,7 @@ const e = {
     message: 'error',
 }
 
-app.delete('/api/seats/:id', (req, res) => {
+router.delete('/api/seats/:id', (req, res) => {
     const id = req.params.id;
     const index = db.seats.findIndex(t => t.id == id);
     if (index != -1) {

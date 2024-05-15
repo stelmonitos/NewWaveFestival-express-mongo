@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@stelmon/randomid-generator": "^1.0.2",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "uuid": "^9.0.1"
   },

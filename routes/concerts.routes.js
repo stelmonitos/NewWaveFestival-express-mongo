@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const uuid = require('uuid');
 const { concerts } = require('../db');
 const db = require('../db.js');
@@ -9,17 +8,14 @@ router.route('/api/concerts').get((req, res) => {
     res.json(db.concerts);
 });
 
-app.get('/api/concerts', (req, res) => {
-    res.json(db.concerts);
-})
-app.get('/api/concerts/random', (req, res) => {
+router.get('/api/concerts/random', (req, res) => {
     const concert = db.concerts[Math.floor(Math.random() * db.concerts.length)];
     res.json(concert);
 });
 
-app.get('/api/concerts/:id', (req, res) => {
+router.get('/api/concerts/:id', (req, res) => {
     const id = req.params.id;
-    const concert = db.find(t => t.id == id);
+    const concert = db.concerts.find(t => t.id == id);
     if (concert) {
         res.json(concert);
     } else {
@@ -27,21 +23,24 @@ app.get('/api/concerts/:id', (req, res) => {
     }
 });
 
-app.put('/api/concerts/:id', (req, res) => {
-    const { author, text } = req.body;
+router.put('/api/concerts/:id', (req, res) => {
+    const { performer, genre, price, day, image } = req.body;
     const id = req.params.id;
     const index = db.concerts.findIndex(t => t.id == id);
     if (index != -1) {
-        db.concerts[index].author = author;
-        db.concerts[index].text = text;
+        db.concerts[index].performer = performer;
+        db.concerts[index].genre = genre;
+        db.concerts[index].price = price;
+        db.concerts[index].day = day;
+        db.concerts[index].image = image;
         res.json(m);
     }
 })
 
-app.post('/api/concerts', (req, res) => {
-    const { author, text } = req.body;
+router.post('/api/concerts', (req, res) => {
+    const { performer, genre, price, day, image } = req.body;
     id = uuid.v4();
-    const concert = { id, author, text };
+    const concert = { id, performer, genre, price, day, image };
     db.concerts.push(concert);
     res.json(m);
 });
@@ -53,7 +52,7 @@ const e = {
     message: 'error',
 }
 
-app.delete('/api/concerts/:id', (req, res) => {
+router.delete('/api/concerts/:id', (req, res) => {
     const id = req.params.id;
     const index = db.concerts.findIndex(t => t.id == id);
     if (index != -1) {
