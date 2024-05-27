@@ -12,10 +12,8 @@ const seatsRoutes = require('./routes/seats.routes.js')
 const concertsRoutes = require('./routes/concerts.routes.js')
 const testimonialsRoutes = require('./routes/testimonials.routes.js')
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow requests from this origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these HTTP methods
-    allowedHeaders: ['Content-Type'] // Allow these headers
-}))
+    "origin": "ws://localhost:3000",
+}));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -25,7 +23,7 @@ app.use(concertsRoutes);
 app.use(seatsRoutes);
 
 io.on('connection', (socket) => {
-    console.log('New socket!')
+    console.log('New socket!' + socket.id);
 })
 
 // Serve static files from the React app
