@@ -46,7 +46,9 @@ router.post('/api/seats', (req, res) => {
     const id = uuid.v4();
     const newSeat = { id, day, seat, client, email };
     db.seats.push(newSeat);
+    socket.emit('update', db.seats);
     res.json(m);
+
 });
 
 const m = {
