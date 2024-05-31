@@ -15,13 +15,17 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   useEffect(() => {
     const socket = io(process.env.NODE_ENV === 'production' ? '' : 'ws://localhost:8000', { transports: ['websocket'] });
     socket.emit('connection');
-    const loadSeats = () => dispatch(loadSeatsRequest());
     socket.on('update', (seats) => {
-      loadSeats();
+      dispatch(loadSeatsRequest(seats));
     })
     return () => {
       socket.disconnect();
     };
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    dispatch(loadSeatsRequest());
   }, [dispatch]);
 
   const isTaken = (seatId) => {
