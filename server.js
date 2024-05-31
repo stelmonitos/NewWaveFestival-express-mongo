@@ -8,6 +8,12 @@ const server = app.listen(process.env.PORT || 8000, () => {
     console.log('Server is running on port: 8000');
 })
 const io = socket(server);
+
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+  });
+  
 const seatsRoutes = require('./routes/seats.routes.js')
 const concertsRoutes = require('./routes/concerts.routes.js')
 const testimonialsRoutes = require('./routes/testimonials.routes.js')
@@ -15,10 +21,6 @@ app.use(cors({
     "origin": "*",
 }));
 
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-  });
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -32,7 +34,7 @@ io.on('connection', (socket) => {
     
     // Handle disconnection
     socket.on('disconnect', () => {
-      console.log('Socket disconnected:', socket.id);
+      console.log('disconnected');
     });
   });
 
