@@ -1,0 +1,54 @@
+[{
+  "_id": {
+    "$oid": "6672a497596a9d875cada7ac"
+  },
+  "day": 1,
+  "seat": 3,
+  "client": "Amanda Doe",
+  "email": "amandadoe@example.com"
+},
+{
+  "_id": {
+    "$oid": "6672a497596a9d875cada7ad"
+  },
+  "day": 1,
+  "seat": 9,
+  "client": "Curtis Johnson",
+  "email": "curtisj@example.com"
+},
+{
+  "_id": {
+    "$oid": "6672a497596a9d875cada7ae"
+  },
+  "day": 1,
+  "seat": 10,
+  "client": "Felix McManara",
+  "email": "felxim98@example.com"
+},
+{
+  "_id": {
+    "$oid": "6672a497596a9d875cada7af"
+  },
+  "day": 1,
+  "seat": 26,
+  "client": "Fauna Keithrins",
+  "email": "mefauna312@example.com"
+},
+{
+  "_id": {
+    "$oid": "6672a497596a9d875cada7b0"
+  },
+  "day": 2,
+  "seat": 1,
+  "client": "Felix McManara",
+  "email": "felxim98@example.com"
+},
+{
+  "_id": {
+    "$oid": "6672a497596a9d875cada7b1"
+  },
+  "day": 2,
+  "seat": 2,
+  "client": "Molier Lo Celso",
+  "email": "moiler.lo.celso@example.com"
+}]
