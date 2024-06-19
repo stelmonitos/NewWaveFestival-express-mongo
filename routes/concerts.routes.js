@@ -1,11 +1,18 @@
 const express = require('express');
-const uuid = require('uuid');
-const { concerts } = require('../db');
-const db = require('../db.js');
 const router = express.Router();
 
-router.route('/api/concerts').get((req, res) => {
-    res.json(db.concerts);
+const Concerts = require('../models/concerts.model');
+
+const ok = { message: 'OK' }
+const nf = { message: 'Not found... :(' }
+
+router.route('/api/concerts').get( async (req, res) => {
+    try {
+        const con = await Concerts.find();
+        res.json(con);
+    } catch (err){
+        res.status(500).json({message: err })
+    }
 });
 
 router.get('/api/concerts/random', (req, res) => {
@@ -44,13 +51,6 @@ router.post('/api/concerts', (req, res) => {
     db.concerts.push(concert);
     res.json(m);
 });
-
-const m = {
-    message: 'OK',
-}
-const e = {
-    message: 'error',
-}
 
 router.delete('/api/concerts/:id', (req, res) => {
     const id = req.params.id;
