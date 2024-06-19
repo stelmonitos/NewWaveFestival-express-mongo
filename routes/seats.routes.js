@@ -1,71 +1,85 @@
 const express = require('express');
-const uuid = require('uuid');
-const { seats } = require('../db');
-const db = require('../db.js');
 const router = express.Router();
+const Seat = require('../models/seats.model')
 
-router.route('/api/seats').get((req, res) => {
-    res.json(db.seats);
-});
+const ok = { message: 'OK' }
+const nf = { message: 'Not found... :(' }
 
-router.get('/api/seats/random', (req, res) => {
-    const seatId = db.seats[Math.floor(Math.random() * db.seats.length)];
-    res.json(seatId);
-});
-
-router.get('/api/seats/:id', (req, res) => {
-    const id = req.params.id;
-    const seat = db.seats.find(t => t.id == id);
-    console.log(seat);
-    if (seat) {
-        res.json(seat);
-    } else {
-        res.json(e)
+router.route('/api/seats').get(async (req, res) => {
+    try {
+        const seat = await Seat.find();
+        res.json(seat)
+    }
+    catch (err) {
+        res.status(500).json({ message: err })
     }
 });
 
-router.put('/api/seats/:id', (req, res) => {
-    const { day, seat, client, email } = req.body;
-    const id = req.params.id;
-    const index = db.seats.findIndex(t => t.id == id);
-    if (index != -1) {
-        db.seats[index].day = day;
-        db.seats[index].seat = seat;
-        db.seats[index].client = client;
-        db.seats[index].email = email;
-        res.json(m);
+router.get('/api/seats/random', async (req, res) => {
+    try {
+        const count = await Seat.countDocuments();
+        const rand = Math.floor(Math.random() * count);
+        const seat = await Seat.findOne({}).skip(rand)
+        if (!seat) res.status(404).json(nf)
+        else res.json(seat);
+    }
+    catch (err) {
+        res.status(500).json({ message: err })
+    }
+});
+
+router.get('/api/seats/:id', async (req, res) => {
+    try {
+        const seat = await Seat.findById(req.params.id)
+        if(!seat) res.status(404).json(nf)
+        else res.json(seat)
+    }
+    catch (err) {
+        res.status(500).json({ message: err })
+    }
+});
+
+router.put('/api/seats/:id', async (req, res) => {
+    try {
+        const { day, seat, client, email } = req.body
+        const s = await Seat.findById(req.params.id)
+        if (s) {
+          s.day = day;
+          s.seat = seat;
+          s.client = client;
+          s.email = email;
+          await s.save();
+          res.json(ok)  
+        } else res.status(404).json(nf)
+    }
+    catch (err) {
+        res.status(500).json({ message: err })
     }
 })
 
-router.post('/api/seats', (req, res) => {
-    const { day, seat, client, email } = req.body;
-    const isSeatTaken = db.seats.some(s => s.day === day && s.seat === seat);
-    if (isSeatTaken) {
-        return res.status(400).json({ message: "The slot is already taken..." });
+router.post('/api/seats', async (req, res) => {
+    try{
+        const { day, seat, client, email } = req.body;
+        const newSeat = new Seat({day, seat, client, email})
+        await newSeat.save();
+        res.json(ok);
     }
-    const id = uuid.v4();
-    const newSeat = { id, day, seat, client, email };
-    db.seats.push(newSeat);
-    req.io.emit('update', db.seats);
-    res.json(m);
+    catch (err) {
+        res.status(500).json({ message: err })
+    }
 
 });
 
-const m = {
-    message: 'OK',
-}
-const e = {
-    message: 'error',
-}
-
-router.delete('/api/seats/:id', (req, res) => {
-    const id = req.params.id;
-    const index = db.seats.findIndex(t => t.id == id);
-    if (index != -1) {
-        db.seats.splice(index, 1);
-        res.json(m);
-    } else {
-        res.json(e);
+router.delete('/api/seats/:id', async (req, res) => {
+    try{
+        const s = await Seat.findById(req.params.id);
+        if(s){
+            await Seat.deleteOne({ _id: req.params.id })
+            res.json({message: s})
+        } else res.status(404).json({nf})
+    }
+    catch (err) {
+        res.status(500).json({ message: err })
     }
 });
 

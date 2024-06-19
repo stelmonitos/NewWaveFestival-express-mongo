@@ -5,7 +5,7 @@ const path = require('path');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/newwavefest', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
@@ -28,7 +28,7 @@ const seatsRoutes = require('./routes/seats.routes.js')
 const concertsRoutes = require('./routes/concerts.routes.js')
 const testimonialsRoutes = require('./routes/testimonials.routes.js')
 app.use(cors({
-  "origin": "*",
+  origin: '*',
 }));
 
 
@@ -58,3 +58,5 @@ app.get('*', (req, res) => {
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found...' });
 })
+
+
