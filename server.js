@@ -6,7 +6,12 @@ const socket = require('socket.io');
 const mongoose = require('mongoose');
 
 const mySecret = process.env['DB_PASS']
-mongoose.connect(`mongodb+srv://stelmon:${mySecret}@cluster0.826canr.mongodb.net/NewWaveDB?retryWrites=true&w=majority&appName=Cluster0`, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const dbURI = process.env.NODE_ENV === 'production'
+? `mongodb+srv://stelmon:${mySecret}@cluster0.826canr.mongodb.net/NewWaveDB?retryWrites=true&w=majority&appName=Cluster0`
+: 'mongodb://localhost:27017/NewWaveDB';
+
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
