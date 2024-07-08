@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const helmet = require('helmet');
+app.use(helmet());
 const cors = require('cors');
 const path = require('path');
 const socket = require('socket.io');

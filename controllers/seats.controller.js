@@ -1,4 +1,5 @@
 const Seat = require('../models/seats.model')
+const sanitize = require('mongo-sanitize')
 
 const ok = { message: 'OK' }
 const nf = { message: 'Not found... :(' }
@@ -18,7 +19,7 @@ exports.random = async (req, res) => {
         const rand = Math.floor(Math.random() * count);
         const seat = await Seat.findOne({}).skip(rand)
         if (!seat) res.status(404).json(nf)
-        else res.json(seat);
+            else res.json(seat);
     }
     catch (err) {
         res.status(500).json({ message: err })
@@ -28,7 +29,7 @@ exports.id = async (req, res) => {
     try {
         const seat = await Seat.findById(req.params.id)
         if(!seat) res.status(404).json(nf)
-        else res.json(seat)
+            else res.json(seat)
     }
     catch (err) {
         res.status(500).json({ message: err })
@@ -39,12 +40,12 @@ exports.put = async (req, res) => {
         const { day, seat, client, email } = req.body
         const s = await Seat.findById(req.params.id)
         if (s) {
-          s.day = day;
-          s.seat = seat;
-          s.client = client;
-          s.email = email;
-          await s.save();
-          res.json(s)  
+            s.day = day;
+            s.seat = seat;
+            s.client = client;
+            s.email = email;
+            await s.save();
+            res.json(s)  
         } else res.status(404).json(nf)
     }
     catch (err) {
@@ -52,8 +53,9 @@ exports.put = async (req, res) => {
     }
 }
 exports.post = async (req, res) => {
+    const client = sanitize(req.body.client)
     try{
-        const { day, seat, client, email } = req.body;
+        const { day, seat, email } = req.body;
         const newSeat = new Seat({day, seat, client, email})
         await newSeat.save();
         res.json(ok);
