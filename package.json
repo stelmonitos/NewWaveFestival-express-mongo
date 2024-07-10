@@ -4,7 +4,7 @@
     "express": "^4.19.2",
     "helmet": "3.21.1",
     "mongo-sanitize": "1.0.1",
-    "mongoose": "7.5.0",
+    "mongoose": "7.7.0",
     "snyk": "^1.1292.1",
     "socket.io": "^4.7.5",
     "uuid": "^9.0.1"
